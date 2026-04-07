@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0a0a14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Etimologika — Aprende el origen de las palabras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a14;
+  --bg2: #0f0f1e;
+  --bg3: #161628;
+  --card: #1a1a2e;
+  --card2: #1f1f38;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f0f0f8;
+  --text2: #9090b0;
+  --text3: #5a5a80;
+  --accent: #7c6af7;
+  --accent2: #a594ff;
+  --accent3: #c4b8ff;
+  --gold: #f5c842;
+  --gold2: #ffd96a;
+  --green: #4ade80;
+  --red: #f87171;
+  --orange: #fb923c;
+  --cyan: #22d3ee;
+  --radius: 16px;
+  --radius2: 12px;
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+  --shadow2: 0 2px 8px rgba(0,0,0,0.3);
+  --glow: 0 0 20px rgba(124,106,247,0.3);
+  --glow2: 0 0 40px rgba(124,106,247,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* ── NOISE TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1000;
+  opacity: 0.4;
+}
+
+/* ── SCREENS ── */
+.screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.screen.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ══════════════════════════════════
+   PANTALLA INICIO
+══════════════════════════════════ */
+#screen-home {
+  justify-content: space-between;
+  padding: 0;
+  background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(124,106,247,0.2) 0%, transparent 70%),
+              radial-gradient(ellipse 60% 40% at 80% 100%, rgba(34,211,238,0.08) 0%, transparent 60%),
+              var(--bg);
+}
+
+.home-header {
+  padding: 60px 32px 0;
+  text-align: center;
+}
+
+.home-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 52px;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, #fff 0%, var(--accent3) 50%, var(--cyan) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.home-tagline {
+  font-size: 14px;
+  color: var(--text3);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  font-weight: 300;
+}
+
+.home-stats-row {
+  display: flex;
+  gap: 12px;
+  padding: 32px 24px 0;
+  justify-content: center;
+}
+
+.home-stat {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 14px 20px;
+  text-align: center;
+  flex: 1;
+  max-width: 120px;
+}
+.home-stat-value {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--accent2);
+}
+.home-stat-label {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.streak-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: linear-gradient(135deg, rgba(245,200,66,0.15), rgba(245,200,66,0.05));
+  border: 1px solid rgba(245,200,66,0.3);
+  border-radius: 50px;
+  padding: 8px 16px;
+  margin: 20px auto 0;
+  width: fit-content;
+  font-size: 13px;
+  color: var(--gold);
+  font-weight: 500;
+}
+.streak-badge .fire { font-size: 16px; }
+
+.home-modes {
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mode-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+}
+.mode-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.02));
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.mode-card:active { transform: scale(0.98); }
+.mode-card:hover { border-color: var(--border2); }
+.mode-card:hover::before { opacity: 1; }
+
+.mode-card.featured {
+  background: linear-gradient(135deg, rgba(124,106,247,0.2), rgba(124,106,247,0.05));
+  border-color: rgba(124,106,247,0.4);
+  box-shadow: var(--glow2);
+}
+
+.mode-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+.mode-icon.purple { background: rgba(124,106,247,0.2); }
+.mode-icon.cyan { background: rgba(34,211,238,0.15); }
+.mode-icon.gold { background: rgba(245,200,66,0.15); }
+.mode-icon.green { background: rgba(74,222,128,0.15); }
+
+.mode-info { flex: 1 }
+.mode-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 2px;
+}
+.mode-desc {
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.4;
+}
+
+.mode-xp {
+  font-size: 11px;
+  color: var(--gold);
+  font-weight: 600;
+  background: rgba(245,200,66,0.1);
+  border-radius: 6px;
+  padding: 3px 8px;
+  flex-shrink: 0;
+}
+
+.home-footer {
+  padding: 0 20px 32px;
+}
+
+/* ══════════════════════════════════
+   BARRA DE NAVEGACIÓN
+══════════════════════════════════ */
+.nav-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10,10,20,0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--border);
+  display: flex;
+  padding: 8px 0 env(safe-area-inset-bottom, 8px);
+  z-index: 100;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 6px 0;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: var(--text3);
+}
+.nav-item.active { color: var(--accent2); }
+.nav-item svg { width: 22px; height: 22px; }
+.nav-label { font-size: 10px; font-weight: 500; letter-spacing: 0.03em; }
+
+/* ══════════════════════════════════
+   PANTALLA FLASHCARD
+══════════════════════════════════ */
+#screen-flashcard {
+  background: var(--bg);
+  padding-bottom: 80px;
+}
+
+.game-header {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.btn-back {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text2);
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.btn-back:active { transform: scale(0.92); }
+
+.game-header-info { flex: 1 }
+.game-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+}
+.game-subtitle { font-size: 11px; color: var(--text3); }
+
+.xp-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(245,200,66,0.1);
+  border: 1px solid rgba(245,200,66,0.2);
+  border-radius: 50px;
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+/* Progress bar */
+.progress-wrap {
+  padding: 12px 20px 0;
+}
+.progress-track {
+  height: 4px;
+  background: var(--card2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--cyan));
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.progress-label {
+  font-size: 11px;
+  color: var(--text3);
+  text-align: right;
+  margin-top: 4px;
+}
+
+/* Flashcard */
+.flashcard-area {
+  padding: 24px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.card-scene {
+  width: 100%;
+  max-width: 380px;
+  height: 240px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-flip {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.card-flip.flipped { transform: rotateY(180deg); }
+
+.card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius);
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  border: 1px solid var(--border2);
+}
+
+.card-front {
+  background: linear-gradient(135deg, var(--card2), var(--card));
+  box-shadow: var(--shadow), var(--glow2);
+}
+
+.card-back {
+  background: linear-gradient(135deg, rgba(124,106,247,0.15), var(--card));
+  border-color: rgba(124,106,247,0.3);
+  box-shadow: var(--shadow), var(--glow);
+  transform: rotateY(180deg);
+}
+
+.card-word {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 38px;
+  letter-spacing: -1px;
+  text-align: center;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+
+.card-hint {
+  font-size: 12px;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-tap-hint {
+  position: absolute;
+  bottom: 14px;
+  font-size: 11px;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.7;
+}
+
+.card-etym-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent2);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.card-etym-text {
+  font-size: 15px;
+  color: var(--text);
+  text-align: center;
+  line-height: 1.6;
+}
+
+.card-languages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  margin-top: 12px;
+}
+
+.lang-badge {
+  background: rgba(124,106,247,0.2);
+  border: 1px solid rgba(124,106,247,0.3);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 11px;
+  color: var(--accent3);
+  font-weight: 500;
+}
+
+.card-actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.btn-action {
+  flex: 1;
+  padding: 14px;
+  border-radius: var(--radius2);
+  border: none;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+.btn-action:active { transform: scale(0.96); }
+
+.btn-knew {
+  background: linear-gradient(135deg, rgba(74,222,128,0.25), rgba(74,222,128,0.1));
+  color: var(--green);
+  border: 1px solid rgba(74,222,128,0.3);
+}
+.btn-didnt {
+  background: linear-gradient(135deg, rgba(248,113,113,0.2), rgba(248,113,113,0.05));
+  color: var(--red);
+  border: 1px solid rgba(248,113,113,0.25);
+}
+.btn-reveal {
+  background: linear-gradient(135deg, var(--accent), #5b4fd4);
+  color: white;
+  box-shadow: 0 4px 20px rgba(124,106,247,0.4);
+  width: 100%;
+  max-width: 380px;
+  padding: 16px;
+}
+
+.btn-def {
+  background: var(--card);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  font-size: 12px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  max-width: 380px;
+  text-align: center;
+  transition: all 0.2s;
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+}
+.btn-def:active { transform: scale(0.98); }
+
+.def-panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 16px;
+  width: 100%;
+  max-width: 380px;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+  display: none;
+}
+.def-panel.visible { display: block; }
+
+/* ══════════════════════════════════
+   PANTALLA QUIZ
+══════════════════════════════════ */
+#screen-quiz {
+  background: var(--bg);
+  padding-bottom: 80px;
+}
+
+.quiz-question-area {
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.quiz-question-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text3);
+  margin-bottom: 20px;
+}
+
+.quiz-word {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 44px;
+  letter-spacing: -2px;
+  background: linear-gradient(135deg, var(--text), var(--accent3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+.quiz-etym-preview {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 14px 18px;
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+  text-align: left;
+  margin-top: 8px;
+}
+.quiz-etym-preview strong {
+  color: var(--text3);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.quiz-options {
+  padding: 8px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quiz-option {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 15px;
+  font-weight: 500;
+}
+.quiz-option:active { transform: scale(0.98); }
+.quiz-option:hover { border-color: var(--border2); }
+
+.quiz-option.correct {
+  background: rgba(74,222,128,0.12);
+  border-color: rgba(74,222,128,0.5);
+  color: var(--green);
+}
+.quiz-option.wrong {
+  background: rgba(248,113,113,0.1);
+  border-color: rgba(248,113,113,0.4);
+  color: var(--red);
+  opacity: 0.7;
+}
+
+.option-letter {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--bg3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text3);
+  flex-shrink: 0;
+}
+.quiz-option.correct .option-letter {
+  background: rgba(74,222,128,0.2);
+  color: var(--green);
+}
+.quiz-option.wrong .option-letter {
+  background: rgba(248,113,113,0.15);
+  color: var(--red);
+}
+
+/* ── Feedback overlay ── */
+.feedback-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.feedback-overlay.show { opacity: 1; pointer-events: all; }
+
+.feedback-icon {
+  font-size: 80px;
+  animation: popIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.feedback-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  margin-top: 12px;
+}
+.feedback-xp {
+  font-size: 18px;
+  font-weight: 600;
+  margin-top: 6px;
+  opacity: 0.8;
+}
+
+.feedback-overlay.correct-fb { background: rgba(10,10,20,0.92); color: var(--green); }
+.feedback-overlay.wrong-fb { background: rgba(10,10,20,0.92); color: var(--red); }
+
+@keyframes popIn {
+  from { transform: scale(0.5); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ══════════════════════════════════
+   PANTALLA EXPLORAR
+══════════════════════════════════ */
+#screen-explore {
+  background: var(--bg);
+  padding-bottom: 80px;
+}
+
+.explore-search-wrap {
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+}
+
+.search-input-wrap {
+  position: relative;
+}
+.search-input {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius2);
+  padding: 13px 16px 13px 44px;
+  color: var(--text);
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.search-input:focus { border-color: var(--accent); }
+.search-input::placeholder { color: var(--text3); }
+.search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text3);
+  pointer-events: none;
+}
+
+.search-results {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.result-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.result-card:active { transform: scale(0.98); }
+.result-card:hover { border-color: var(--border2); }
+
+.result-word {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+.result-genre {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+.result-etym {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.result-langs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.explore-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text3);
+}
+.explore-empty-icon { font-size: 40px; margin-bottom: 12px; }
+.explore-empty-text { font-size: 14px; line-height: 1.6; }
+
+/* Detail panel */
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 300;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+.detail-overlay.open { opacity: 1; pointer-events: all; }
+
+.detail-sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--bg2);
+  border-top: 1px solid var(--border2);
+  border-radius: 24px 24px 0 0;
+  padding: 20px 20px env(safe-area-inset-bottom, 20px);
+  transform: translateY(100%);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  max-height: 80vh;
+  overflow-y: auto;
+  z-index: 301;
+}
+.detail-sheet.open { transform: translateY(0); }
+
+.sheet-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--border2);
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+
+.detail-word {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  letter-spacing: -1px;
+  margin-bottom: 4px;
+}
+.detail-meta {
+  font-size: 12px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 20px;
+}
+
+.detail-section {
+  margin-bottom: 20px;
+}
+.detail-section-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--accent2);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.detail-section-body {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.detail-def-toggle {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: var(--text3);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+.detail-def-toggle:active { transform: scale(0.98); }
+
+/* ══════════════════════════════════
+   PANTALLA PERFIL
+══════════════════════════════════ */
+#screen-profile {
+  background: var(--bg);
+  padding-bottom: 80px;
+}
+
+.profile-header {
+  background: linear-gradient(180deg, rgba(124,106,247,0.15) 0%, transparent 100%);
+  padding: 48px 24px 32px;
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--cyan));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 12px;
+  box-shadow: 0 0 30px rgba(124,106,247,0.4);
+}
+
+.profile-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.profile-level {
+  font-size: 12px;
+  color: var(--accent2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.xp-bar-wrap {
+  margin: 16px 0 0;
+}
+.xp-bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.xp-bar-track {
+  height: 6px;
+  background: var(--card2);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--cyan));
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.profile-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 20px;
+}
+
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 16px;
+}
+.stat-card-value {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 28px;
+  color: var(--text);
+}
+.stat-card-label {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+.stat-card-icon { font-size: 20px; margin-bottom: 6px; }
+
+.achievements-section {
+  padding: 0 20px 20px;
+}
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  margin-bottom: 12px;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.achievement {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 12px 8px;
+  text-align: center;
+  transition: all 0.2s;
+}
+.achievement.unlocked {
+  border-color: rgba(245,200,66,0.3);
+  background: rgba(245,200,66,0.05);
+}
+.achievement-icon { font-size: 22px; margin-bottom: 4px; }
+.achievement-name { font-size: 9px; color: var(--text3); line-height: 1.3; }
+.achievement.locked { opacity: 0.35; filter: grayscale(1); }
+
+.ranking-section {
+  padding: 0 20px 20px;
+}
+
+.ranking-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius2);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.ranking-item.me {
+  border-color: rgba(124,106,247,0.4);
+  background: rgba(124,106,247,0.08);
+}
+.rank-pos {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  width: 28px;
+  text-align: center;
+  color: var(--text3);
+}
+.rank-pos.gold { color: var(--gold); }
+.rank-pos.silver { color: #c0c0c0; }
+.rank-pos.bronze { color: #cd7f32; }
+.rank-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--card2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+.rank-info { flex: 1 }
+.rank-name { font-size: 14px; font-weight: 500; }
+.rank-xp { font-size: 11px; color: var(--text3); }
+.rank-score {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--accent2);
+}
+
+/* ══════════════════════════════════
+   ANIMACIONES GLOBALES
+══════════════════════════════════ */
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes xpFloat {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-60px); opacity: 0; }
+}
+
+.xp-float {
+  position: fixed;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 20px;
+  color: var(--gold);
+  pointer-events: none;
+  z-index: 500;
+  animation: xpFloat 1.2s ease-out forwards;
+}
+
+.screen.active > * {
+  animation: slideUp 0.3s ease both;
+}
+
+/* Loading state */
+.loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 40px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ══════════════════════════════════
+   SAFE AREA & RESPONSIVE
+══════════════════════════════════ */
+@media (min-width: 480px) {
+  .screen { max-width: 480px; margin: 0 auto; }
+  .nav-bar { max-width: 480px; left: 50%; transform: translateX(-50%); }
+  .feedback-overlay { max-width: 480px; left: 50%; transform: translateX(-50%); }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ PANTALLA: INICIO ══ -->
+<div id="screen-home" class="screen active">
+  <div class="home-header">
+    <div class="home-logo">Etimologika</div>
+    <div class="home-tagline">El origen de las palabras</div>
+  </div>
+
+  <div class="home-stats-row">
+    <div class="home-stat">
+      <div class="home-stat-value" id="home-xp">0</div>
+      <div class="home-stat-label">XP Total</div>
+    </div>
+    <div class="home-stat">
+      <div class="home-stat-value" id="home-words">0</div>
+      <div class="home-stat-label">Palabras</div>
+    </div>
+    <div class="home-stat">
+      <div class="home-stat-value" id="home-level">1</div>
+      <div class="home-stat-label">Nivel</div>
+    </div>
+  </div>
+
+  <div class="streak-badge" id="streak-badge">
+    <span class="fire">🔥</span>
+    <span id="streak-text">0 días de racha</span>
+  </div>
+
+  <div class="home-modes">
+    <div class="mode-card featured" onclick="startFlashcard()">
+      <div class="mode-icon purple">🃏</div>
+      <div class="mode-info">
+        <div class="mode-title">Flashcards</div>
+        <div class="mode-desc">Descubre el origen. Voltea la carta.</div>
+      </div>
+      <div class="mode-xp">+10 XP</div>
+    </div>
+
+    <div class="mode-card" onclick="startQuiz()">
+      <div class="mode-icon cyan">⚡</div>
+      <div class="mode-info">
+        <div class="mode-title">Quiz Rápido</div>
+        <div class="mode-desc">4 opciones. ¿De qué lengua viene?</div>
+      </div>
+      <div class="mode-xp">+15 XP</div>
+    </div>
+
+    <div class="mode-card" onclick="showScreen('explore')">
+      <div class="mode-icon gold">🔍</div>
+      <div class="mode-info">
+        <div class="mode-title">Explorar</div>
+        <div class="mode-desc">Busca cualquier palabra del diccionario.</div>
+      </div>
+      <div class="mode-xp">+5 XP</div>
+    </div>
+  </div>
+
+  <div class="home-footer"></div>
+</div>
+
+<!-- ══ PANTALLA: FLASHCARD ══ -->
+<div id="screen-flashcard" class="screen">
+  <div class="game-header">
+    <div class="btn-back" onclick="showScreen('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </div>
+    <div class="game-header-info">
+      <div class="game-title">Flashcards</div>
+      <div class="game-subtitle" id="fc-subtitle">Cargando...</div>
+    </div>
+    <div class="xp-pill">⚡ <span id="fc-xp">0</span></div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="fc-progress" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="fc-progress-label">0 / 10</div>
+  </div>
+
+  <div class="flashcard-area">
+    <div class="card-scene" id="card-scene" onclick="flipCard()">
+      <div class="card-flip" id="card-flip">
+        <div class="card-face card-front">
+          <div class="card-word" id="fc-word">—</div>
+          <div class="card-hint" id="fc-hint">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4m0 4h.01"/></svg>
+            <span id="fc-campo">—</span>
+          </div>
+          <div class="card-tap-hint">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13l3 3 7-7"/></svg>
+            Toca para revelar
+          </div>
+        </div>
+        <div class="card-face card-back">
+          <div class="card-etym-label">Etimología</div>
+          <div class="card-etym-text" id="fc-etym">—</div>
+          <div class="card-languages" id="fc-langs"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="fc-reveal-btn-wrap" style="width:100%;max-width:380px">
+      <button class="btn-action btn-reveal" onclick="flipCard()">Revelar origen</button>
+    </div>
+
+    <div id="fc-action-btns" style="display:none;width:100%;max-width:380px">
+      <div class="card-actions">
+        <button class="btn-action btn-didnt" onclick="fcAnswer(false)">✗ No lo sabía</button>
+        <button class="btn-action btn-knew" onclick="fcAnswer(true)">✓ Lo sabía</button>
+      </div>
+    </div>
+
+    <button class="btn-def" id="fc-def-btn" onclick="toggleDef()" style="display:none">
+      Ver definición completa
+    </button>
+    <div class="def-panel" id="fc-def-panel"></div>
+  </div>
+</div>
+
+<!-- ══ PANTALLA: QUIZ ══ -->
+<div id="screen-quiz" class="screen">
+  <div class="game-header">
+    <div class="btn-back" onclick="showScreen('home')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </div>
+    <div class="game-header-info">
+      <div class="game-title">Quiz Rápido</div>
+      <div class="game-subtitle" id="quiz-subtitle">Cargando...</div>
+    </div>
+    <div class="xp-pill">⚡ <span id="quiz-xp">0</span></div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-track">
+      <div class="progress-fill" id="quiz-progress" style="width:0%"></div>
+    </div>
+    <div class="progress-label" id="quiz-progress-label">0 / 10</div>
+  </div>
+
+  <div class="quiz-question-area">
+    <div class="quiz-question-label">¿De qué lengua proviene?</div>
+    <div class="quiz-word" id="quiz-word">—</div>
+    <div class="quiz-etym-preview" id="quiz-etym-preview">
+      <strong>Pista etimológica</strong>
+      <span id="quiz-etym-text">—</span>
+    </div>
+  </div>
+
+  <div class="quiz-options" id="quiz-options"></div>
+</div>
+
+<!-- ══ PANTALLA: EXPLORAR ══ -->
+<div id="screen-explore" class="screen">
+  <div class="explore-search-wrap">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div class="btn-back" onclick="showScreen('home')" style="flex-shrink:0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M15 18l-6-6 6-6"/>
+        </svg>
+      </div>
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:16px">Explorar</div>
+    </div>
+    <div class="search-input-wrap">
+      <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+      </svg>
+      <input type="text" class="search-input" id="search-input"
+        placeholder="Busca una palabra..." autocomplete="off" autocorrect="off"
+        oninput="onSearch(this.value)">
+    </div>
+  </div>
+
+  <div id="search-results" class="search-results">
+    <div class="explore-empty">
+      <div class="explore-empty-icon">📖</div>
+      <div class="explore-empty-text">Escribe una palabra para buscar<br>en las 38.705 entradas del diccionario</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANTALLA: PERFIL ══ -->
+<div id="screen-profile" class="screen">
+  <div class="profile-header">
+    <div class="profile-avatar">🦉</div>
+    <div class="profile-name" id="prof-name">Etimólogo</div>
+    <div class="profile-level" id="prof-level">Nivel 1 · Aprendiz</div>
+    <div class="xp-bar-wrap">
+      <div class="xp-bar-label">
+        <span id="prof-xp-cur">0 XP</span>
+        <span id="prof-xp-next">100 XP</span>
+      </div>
+      <div class="xp-bar-track">
+        <div class="xp-bar-fill" id="prof-xp-bar" style="width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="profile-stats-grid">
+    <div class="stat-card">
+      <div class="stat-card-icon">⚡</div>
+      <div class="stat-card-value" id="prof-total-xp">0</div>
+      <div class="stat-card-label">XP Total</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon">🔥</div>
+      <div class="stat-card-value" id="prof-streak">0</div>
+      <div class="stat-card-label">Racha (días)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon">✅</div>
+      <div class="stat-card-value" id="prof-correct">0</div>
+      <div class="stat-card-label">Aciertos</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon">📚</div>
+      <div class="stat-card-value" id="prof-words">0</div>
+      <div class="stat-card-label">Palabras vistas</div>
+    </div>
+  </div>
+
+  <div class="achievements-section">
+    <div class="section-title">Logros</div>
+    <div class="achievements-grid" id="achievements-grid"></div>
+  </div>
+
+  <div class="ranking-section">
+    <div class="section-title">Ranking Local</div>
+    <div id="ranking-list"></div>
+  </div>
+</div>
+
+<!-- ══ FEEDBACK OVERLAY ══ -->
+<div class="feedback-overlay" id="feedback-overlay">
+  <div class="feedback-icon" id="feedback-icon">✓</div>
+  <div class="feedback-text" id="feedback-text">¡Correcto!</div>
+  <div class="feedback-xp" id="feedback-xp">+15 XP</div>
+</div>
+
+<!-- ══ DETAIL SHEET (Explorar) ══ -->
+<div class="detail-overlay" id="detail-overlay" onclick="closeDetail()"></div>
+<div class="detail-sheet" id="detail-sheet">
+  <div class="sheet-handle"></div>
+  <div class="detail-word" id="detail-word">—</div>
+  <div class="detail-meta" id="detail-meta">—</div>
+  <div class="detail-section">
+    <div class="detail-section-title">Etimología</div>
+    <div class="detail-section-body" id="detail-etym">—</div>
+  </div>
+  <div class="detail-section">
+    <div class="detail-section-title">Lenguas de origen</div>
+    <div class="card-languages" id="detail-langs"></div>
+  </div>
+  <div class="detail-section" id="detail-def-section" style="display:none">
+    <div class="detail-section-title">Definición</div>
+    <div class="detail-section-body" id="detail-def">—</div>
+  </div>
+  <div class="detail-def-toggle" id="detail-def-toggle" onclick="toggleDetailDef()">
+    Ver definición completa
+  </div>
+</div>
+
+<!-- ══ NAV BAR ══ -->
+<nav class="nav-bar">
+  <div class="nav-item active" id="nav-home" onclick="showScreen('home')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+    </svg>
+    <span class="nav-label">Inicio</span>
+  </div>
+  <div class="nav-item" id="nav-flashcard" onclick="startFlashcard()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+    </svg>
+    <span class="nav-label">Flashcard</span>
+  </div>
+  <div class="nav-item" id="nav-quiz" onclick="startQuiz()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+    </svg>
+    <span class="nav-label">Quiz</span>
+  </div>
+  <div class="nav-item" id="nav-explore" onclick="showScreen('explore')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <span class="nav-label">Explorar</span>
+  </div>
+  <div class="nav-item" id="nav-profile" onclick="showScreen('profile')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+    </svg>
+    <span class="nav-label">Perfil</span>
+  </div>
+</nav>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIGURACIÓN
+// ══════════════════════════════════════════
+const BASE_URL = 'https://livbad.github.io/echegaray-datos/';
+const LETTERS = 'abcdefghijklmnopqrstuvwxyz'.split('');
+const LEVELS = [
+  { name: 'Aprendiz',    xp: 0 },
+  { name: 'Curioso',     xp: 100 },
+  { name: 'Estudioso',   xp: 300 },
+  { name: 'Erudito',     xp: 700 },
+  { name: 'Etimólogo',   xp: 1500 },
+  { name: 'Maestro',     xp: 3000 },
+  { name: 'Lexicólogo',  xp: 6000 },
+];
+const ACHIEVEMENTS = [
+  { id: 'first',     icon: '🌱', name: 'Primera palabra',  cond: s => s.wordsTotal >= 1 },
+  { id: 'ten',       icon: '🔟', name: '10 palabras',       cond: s => s.wordsTotal >= 10 },
+  { id: 'hundred',   icon: '💯', name: '100 palabras',      cond: s => s.wordsTotal >= 100 },
+  { id: 'streak3',   icon: '🔥', name: '3 días seguidos',   cond: s => s.streak >= 3 },
+  { id: 'streak7',   icon: '⚡', name: 'Semana completa',   cond: s => s.streak >= 7 },
+  { id: 'quiz10',    icon: '🎯', name: '10 aciertos quiz',  cond: s => s.correctQuiz >= 10 },
+  { id: 'latin',     icon: '🏛️', name: 'Amante del latín',  cond: s => (s.langStats?.Latín||0) >= 20 },
+  { id: 'xp500',     icon: '⭐', name: '500 XP',            cond: s => s.xp >= 500 },
+];
+
+// ══════════════════════════════════════════
+// ESTADO
+// ══════════════════════════════════════════
+let cache = {}; // letra -> [entradas]
+let state = loadState();
+
+function loadState() {
+  try {
+    return JSON.parse(localStorage.getItem('etimologika_state')) || defaultState();
+  } catch { return defaultState(); }
+}
+function defaultState() {
+  return {
+    xp: 0, wordsTotal: 0, correctQuiz: 0,
+    streak: 0, lastPlayDate: null,
+    seenWords: [], achievements: [],
+    langStats: {}, sessions: 0,
+    ranking: [
+      { name: 'Tú', xp: 0, avatar: '🦉', me: true },
+    ]
+  };
+}
+function saveState() {
+  state.ranking[0].xp = state.xp;
+  localStorage.setItem('etimologika_state', JSON.stringify(state));
+}
+
+function addXP(amount, x, y) {
+  state.xp += amount;
+  state.sessions++;
+  updateStreak();
+  checkAchievements();
+  saveState();
+  updateHomeStats();
+  // Float animation
+  if (x !== undefined) {
+    const el = document.createElement('div');
+    el.className = 'xp-float';
+    el.textContent = `+${amount} XP`;
+    el.style.left = (x - 30) + 'px';
+    el.style.top = (y - 40) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1200);
+  }
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  if (state.lastPlayDate === today) return;
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  if (state.lastPlayDate === yesterday) {
+    state.streak++;
+  } else if (state.lastPlayDate !== today) {
+    state.streak = 1;
+  }
+  state.lastPlayDate = today;
+}
+
+function getLevel(xp) {
+  let lv = 0;
+  for (let i = LEVELS.length - 1; i >= 0; i--) {
+    if (xp >= LEVELS[i].xp) { lv = i; break; }
+  }
+  return lv;
+}
+
+function checkAchievements() {
+  ACHIEVEMENTS.forEach(a => {
+    if (!state.achievements.includes(a.id) && a.cond(state)) {
+      state.achievements.push(a.id);
+    }
+  });
+}
+
+// ══════════════════════════════════════════
+// CARGA DE DATOS
+// ══════════════════════════════════════════
+async function loadLetter(letter) {
+  if (cache[letter]) return cache[letter];
+  try {
+    const res = await fetch(BASE_URL + letter + '.json');
+    if (!res.ok) throw new Error('404');
+    const data = await res.json();
+    cache[letter] = data;
+    return data;
+  } catch (e) {
+    console.warn('No se pudo cargar', letter, e);
+    return [];
+  }
+}
+
+async function loadRandomEntries(n = 30) {
+  const letter = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+  const entries = await loadLetter(letter);
+  if (!entries.length) return loadRandomEntries(n);
+  const shuffled = [...entries].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, n);
+}
+
+async function searchEntries(query) {
+  if (!query || query.length < 2) return [];
+  const letter = query[0].toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+  const entries = await loadLetter(letter);
+  const q = query.toLowerCase();
+  return entries.filter(e =>
+    e.palabra.toLowerCase().startsWith(q)
+  ).slice(0, 20);
+}
+
+// ══════════════════════════════════════════
+// NAVEGACIÓN
+// ══════════════════════════════════════════
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active');
+
+  if (name === 'home') updateHomeStats();
+  if (name === 'profile') updateProfile();
+}
+
+// ══════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════
+function updateHomeStats() {
+  document.getElementById('home-xp').textContent = state.xp;
+  document.getElementById('home-words').textContent = state.wordsTotal;
+  document.getElementById('home-level').textContent = getLevel(state.xp) + 1;
+  document.getElementById('streak-text').textContent =
+    state.streak + (state.streak === 1 ? ' día de racha' : ' días de racha');
+}
+
+// ══════════════════════════════════════════
+// FLASHCARD
+// ══════════════════════════════════════════
+let fcEntries = [];
+let fcIndex = 0;
+let fcFlipped = false;
+let fcSessionXP = 0;
+
+async function startFlashcard() {
+  showScreen('flashcard');
+  document.getElementById('fc-subtitle').textContent = 'Cargando...';
+  fcEntries = await loadRandomEntries(10);
+  fcIndex = 0;
+  fcSessionXP = 0;
+  document.getElementById('fc-xp').textContent = 0;
+  showFCCard();
+}
+
+function showFCCard() {
+  if (fcIndex >= fcEntries.length) {
+    endFlashcardSession();
+    return;
+  }
+  const e = fcEntries[fcIndex];
+  fcFlipped = false;
+
+  // Reset flip
+  const flip = document.getElementById('card-flip');
+  flip.classList.remove('flipped');
+
+  // Fill front
+  document.getElementById('fc-word').textContent = e.palabra;
+  document.getElementById('fc-campo').textContent =
+    e.campo_tematico || e.genero || '—';
+
+  // Fill back
+  document.getElementById('fc-etym').textContent = e.etimologia_texto || '—';
+  const langsEl = document.getElementById('fc-langs');
+  langsEl.innerHTML = (e.lenguas_origen || [])
+    .map(l => `<span class="lang-badge">${l}</span>`).join('');
+
+  // Definition
+  document.getElementById('fc-def-panel').textContent = e.definicion || '';
+  document.getElementById('fc-def-panel').classList.remove('visible');
+  document.getElementById('fc-def-btn').style.display = 'none';
+
+  // Buttons
+  document.getElementById('fc-reveal-btn-wrap').style.display = 'block';
+  document.getElementById('fc-action-btns').style.display = 'none';
+
+  // Progress
+  const pct = (fcIndex / fcEntries.length) * 100;
+  document.getElementById('fc-progress').style.width = pct + '%';
+  document.getElementById('fc-progress-label').textContent =
+    fcIndex + ' / ' + fcEntries.length;
+  document.getElementById('fc-subtitle').textContent =
+    'Carta ' + (fcIndex + 1) + ' de ' + fcEntries.length;
+
+  // Track seen
+  if (!state.seenWords.includes(e.palabra)) {
+    state.seenWords.push(e.palabra);
+    state.wordsTotal = state.seenWords.length;
+  }
+}
+
+function flipCard() {
+  if (fcFlipped) return;
+  fcFlipped = true;
+  document.getElementById('card-flip').classList.add('flipped');
+  document.getElementById('fc-reveal-btn-wrap').style.display = 'none';
+  document.getElementById('fc-action-btns').style.display = 'block';
+  document.getElementById('fc-def-btn').style.display = 'block';
+}
+
+function fcAnswer(knew) {
+  const xp = knew ? 10 : 3;
+  fcSessionXP += xp;
+  state.wordsTotal = state.seenWords.length;
+
+  if (knew) {
+    const btn = document.querySelector('.btn-knew');
+    const rect = btn.getBoundingClientRect();
+    addXP(xp, rect.left + rect.width/2, rect.top);
+  } else {
+    addXP(xp);
+  }
+  document.getElementById('fc-xp').textContent = fcSessionXP;
+
+  fcIndex++;
+  setTimeout(showFCCard, 200);
+}
+
+function endFlashcardSession() {
+  document.getElementById('fc-progress').style.width = '100%';
+  document.getElementById('fc-progress-label').textContent = '✓ Completado';
+  document.getElementById('fc-subtitle').textContent = '¡Sesión completada!';
+  const area = document.querySelector('.flashcard-area');
+  area.innerHTML = `
+    <div style="text-align:center;padding:40px 20px">
+      <div style="font-size:60px;margin-bottom:16px">🎉</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;margin-bottom:8px">¡Completado!</div>
+      <div style="color:var(--text2);margin-bottom:24px">Has ganado <strong style="color:var(--gold)">${fcSessionXP} XP</strong> en esta sesión</div>
+      <button class="btn-action btn-reveal" onclick="startFlashcard()" style="max-width:280px;margin:0 auto">
+        Otra sesión
+      </button>
+    </div>`;
+}
+
+function toggleDef() {
+  const panel = document.getElementById('fc-def-panel');
+  const btn = document.getElementById('fc-def-btn');
+  if (panel.classList.contains('visible')) {
+    panel.classList.remove('visible');
+    btn.textContent = 'Ver definición completa';
+  } else {
+    panel.classList.add('visible');
+    btn.textContent = 'Ocultar definición';
+    addXP(2);
+  }
+}
+
+// ══════════════════════════════════════════
+// QUIZ
+// ══════════════════════════════════════════
+const ALL_LANGS = ['Latín','Griego','Árabe','Francés','Italiano','Catalán',
+  'Portugués','Alemán','Inglés','Hebreo','Persa','Sánscrito','Vascuence','Eslavo'];
+
+let quizEntries = [];
+let quizIndex = 0;
+let quizAnswered = false;
+let quizSessionXP = 0;
+
+async function startQuiz() {
+  showScreen('quiz');
+  document.getElementById('quiz-subtitle').textContent = 'Cargando...';
+  // Load entries that have at least one known language
+  let entries = await loadRandomEntries(40);
+  quizEntries = entries.filter(e => e.lenguas_origen && e.lenguas_origen.length > 0).slice(0, 10);
+  if (quizEntries.length < 5) {
+    entries = await loadRandomEntries(60);
+    quizEntries = entries.filter(e => e.lenguas_origen && e.lenguas_origen.length > 0).slice(0, 10);
+  }
+  quizIndex = 0;
+  quizSessionXP = 0;
+  document.getElementById('quiz-xp').textContent = 0;
+  showQuizQuestion();
+}
+
+function showQuizQuestion() {
+  if (quizIndex >= quizEntries.length) {
+    endQuizSession();
+    return;
+  }
+  quizAnswered = false;
+  const e = quizEntries[quizIndex];
+  const correct = e.lenguas_origen[0];
+
+  document.getElementById('quiz-word').textContent = e.palabra;
+  document.getElementById('quiz-etym-text').textContent =
+    e.etimologia_texto.substring(0, 120) + (e.etimologia_texto.length > 120 ? '…' : '');
+
+  // Build options: correct + 3 random wrong
+  const wrong = ALL_LANGS.filter(l => l !== correct)
+    .sort(() => Math.random() - 0.5).slice(0, 3);
+  const options = [correct, ...wrong].sort(() => Math.random() - 0.5);
+
+  const letters = ['A','B','C','D'];
+  const optionsEl = document.getElementById('quiz-options');
+  optionsEl.innerHTML = options.map((opt, i) => `
+    <div class="quiz-option" onclick="quizAnswer(this, '${opt}', '${correct}')">
+      <div class="option-letter">${letters[i]}</div>
+      <span>${opt}</span>
+    </div>`).join('');
+
+  // Progress
+  const pct = (quizIndex / quizEntries.length) * 100;
+  document.getElementById('quiz-progress').style.width = pct + '%';
+  document.getElementById('quiz-progress-label').textContent =
+    quizIndex + ' / ' + quizEntries.length;
+  document.getElementById('quiz-subtitle').textContent =
+    'Pregunta ' + (quizIndex + 1) + ' de ' + quizEntries.length;
+
+  // Track seen
+  if (!state.seenWords.includes(e.palabra)) {
+    state.seenWords.push(e.palabra);
+    state.wordsTotal = state.seenWords.length;
+  }
+}
+
+function quizAnswer(el, chosen, correct) {
+  if (quizAnswered) return;
+  quizAnswered = true;
+
+  const isCorrect = chosen === correct;
+  const xp = isCorrect ? 15 : 0;
+
+  // Mark options
+  document.querySelectorAll('.quiz-option').forEach(opt => {
+    const lang = opt.querySelector('span').textContent;
+    if (lang === correct) opt.classList.add('correct');
+    else if (lang === chosen && !isCorrect) opt.classList.add('wrong');
+  });
+
+  if (isCorrect) {
+    state.correctQuiz++;
+    quizSessionXP += xp;
+    document.getElementById('quiz-xp').textContent = quizSessionXP;
+    // Track language
+    state.langStats[correct] = (state.langStats[correct] || 0) + 1;
+    const rect = el.getBoundingClientRect();
+    addXP(xp, rect.left + rect.width/2, rect.top);
+    showFeedback(true, xp);
+  } else {
+    addXP(0);
+    showFeedback(false, 0);
+  }
+
+  saveState();
+  quizIndex++;
+  setTimeout(() => {
+    hideFeedback();
+    showQuizQuestion();
+  }, 1400);
+}
+
+function showFeedback(correct, xp) {
+  const overlay = document.getElementById('feedback-overlay');
+  overlay.className = 'feedback-overlay show ' + (correct ? 'correct-fb' : 'wrong-fb');
+  document.getElementById('feedback-icon').textContent = correct ? '✓' : '✗';
+  document.getElementById('feedback-text').textContent = correct ? '¡Correcto!' : 'Incorrecto';
+  document.getElementById('feedback-xp').textContent = correct ? `+${xp} XP` : 'Sin XP';
+}
+function hideFeedback() {
+  document.getElementById('feedback-overlay').className = 'feedback-overlay';
+}
+
+function endQuizSession() {
+  document.getElementById('quiz-progress').style.width = '100%';
+  const area = document.querySelector('#screen-quiz');
+  const content = area.querySelector('.quiz-question-area');
+  const opts = area.querySelector('.quiz-options');
+  content.innerHTML = `
+    <div style="text-align:center;padding:40px 20px">
+      <div style="font-size:60px;margin-bottom:16px">🏆</div>
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;margin-bottom:8px">¡Quiz completado!</div>
+      <div style="color:var(--text2);margin-bottom:8px">Has ganado <strong style="color:var(--gold)">${quizSessionXP} XP</strong></div>
+      <div style="color:var(--text3);font-size:13px;margin-bottom:24px">Aciertos: ${state.correctQuiz} totales</div>
+      <button class="btn-action btn-reveal" onclick="startQuiz()" style="max-width:280px;margin:0 auto">
+        Otro quiz
+      </button>
+    </div>`;
+  opts.innerHTML = '';
+}
+
+// ══════════════════════════════════════════
+// EXPLORAR
+// ══════════════════════════════════════════
+let searchTimeout;
+
+function onSearch(val) {
+  clearTimeout(searchTimeout);
+  if (!val || val.length < 2) {
+    document.getElementById('search-results').innerHTML = `
+      <div class="explore-empty">
+        <div class="explore-empty-icon">📖</div>
+        <div class="explore-empty-text">Escribe una palabra para buscar<br>en las 38.705 entradas del diccionario</div>
+      </div>`;
+    return;
+  }
+  document.getElementById('search-results').innerHTML =
+    '<div class="loading-spinner"></div>';
+  searchTimeout = setTimeout(async () => {
+    const results = await searchEntries(val);
+    renderSearchResults(results, val);
+  }, 300);
+}
+
+function renderSearchResults(results, query) {
+  const el = document.getElementById('search-results');
+  if (!results.length) {
+    el.innerHTML = `
+      <div class="explore-empty">
+        <div class="explore-empty-icon">🔍</div>
+        <div class="explore-empty-text">No se encontraron palabras<br>que empiecen por "<strong>${query}</strong>"</div>
+      </div>`;
+    return;
+  }
+  el.innerHTML = results.map((e, i) => `
+    <div class="result-card" onclick="openDetail(${i})">
+      <div class="result-word">${e.palabra}</div>
+      <div class="result-genre">${e.genero}${e.campo_tematico ? ' · ' + e.campo_tematico : ''}</div>
+      <div class="result-etym">${e.etimologia_texto}</div>
+      <div class="result-langs">
+        ${(e.lenguas_origen||[]).map(l => `<span class="lang-badge">${l}</span>`).join('')}
+      </div>
+    </div>`).join('');
+  // Store for detail
+  window._searchResults = results;
+}
+
+function openDetail(i) {
+  const e = window._searchResults[i];
+  if (!e) return;
+
+  document.getElementById('detail-word').textContent = e.palabra;
+  document.getElementById('detail-meta').textContent =
+    e.genero + (e.campo_tematico ? ' · ' + e.campo_tematico : '') +
+    (e.tomo ? ' · Tomo ' + e.tomo : '');
+  document.getElementById('detail-etym').textContent = e.etimologia_texto || '—';
+  document.getElementById('detail-langs').innerHTML =
+    (e.lenguas_origen||[]).map(l => `<span class="lang-badge">${l}</span>`).join('') || '—';
+  document.getElementById('detail-def').textContent = e.definicion || '—';
+  document.getElementById('detail-def-section').style.display = 'none';
+  document.getElementById('detail-def-toggle').textContent = 'Ver definición completa';
+
+  document.getElementById('detail-overlay').classList.add('open');
+  document.getElementById('detail-sheet').classList.add('open');
+
+  // XP por explorar
+  if (!state.seenWords.includes(e.palabra)) {
+    state.seenWords.push(e.palabra);
+    state.wordsTotal = state.seenWords.length;
+    addXP(5);
+    saveState();
+  }
+}
+
+function closeDetail() {
+  document.getElementById('detail-overlay').classList.remove('open');
+  document.getElementById('detail-sheet').classList.remove('open');
+}
+
+function toggleDetailDef() {
+  const sec = document.getElementById('detail-def-section');
+  const btn = document.getElementById('detail-def-toggle');
+  if (sec.style.display === 'none') {
+    sec.style.display = 'block';
+    btn.textContent = 'Ocultar definición';
+  } else {
+    sec.style.display = 'none';
+    btn.textContent = 'Ver definición completa';
+  }
+}
+
+// ══════════════════════════════════════════
+// PERFIL
+// ══════════════════════════════════════════
+function updateProfile() {
+  const xp = state.xp;
+  const lvIdx = getLevel(xp);
+  const lv = LEVELS[lvIdx];
+  const nextLv = LEVELS[lvIdx + 1];
+  const pct = nextLv
+    ? Math.round(((xp - lv.xp) / (nextLv.xp - lv.xp)) * 100)
+    : 100;
+
+  document.getElementById('prof-level').textContent =
+    `Nivel ${lvIdx + 1} · ${lv.name}`;
+  document.getElementById('prof-xp-cur').textContent = xp + ' XP';
+  document.getElementById('prof-xp-next').textContent =
+    nextLv ? nextLv.xp + ' XP' : 'Máximo';
+  document.getElementById('prof-xp-bar').style.width = pct + '%';
+  document.getElementById('prof-total-xp').textContent = xp;
+  document.getElementById('prof-streak').textContent = state.streak;
+  document.getElementById('prof-correct').textContent = state.correctQuiz;
+  document.getElementById('prof-words').textContent = state.wordsTotal;
+
+  // Achievements
+  const grid = document.getElementById('achievements-grid');
+  grid.innerHTML = ACHIEVEMENTS.map(a => {
+    const unlocked = state.achievements.includes(a.id);
+    return `<div class="achievement ${unlocked ? 'unlocked' : 'locked'}">
+      <div class="achievement-icon">${a.icon}</div>
+      <div class="achievement-name">${a.name}</div>
+    </div>`;
+  }).join('');
+
+  // Ranking
+  const ranking = [...state.ranking].sort((a,b) => b.xp - a.xp);
+  const rankEl = document.getElementById('ranking-list');
+  const medals = ['gold','silver','bronze'];
+  rankEl.innerHTML = ranking.map((r, i) => `
+    <div class="ranking-item ${r.me ? 'me' : ''}">
+      <div class="rank-pos ${medals[i]||''}">${i+1}</div>
+      <div class="rank-avatar">${r.avatar || '👤'}</div>
+      <div class="rank-info">
+        <div class="rank-name">${r.name}${r.me ? ' (Tú)' : ''}</div>
+        <div class="rank-xp">${r.xp} XP acumulados</div>
+      </div>
+      <div class="rank-score">${r.xp}</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+updateHomeStats();
+checkAchievements();
+</script>
+</body>
+</html>
