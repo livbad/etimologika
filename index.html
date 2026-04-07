@@ -410,11 +410,14 @@ body::before {
 .card-word {
   font-family: 'Syne', sans-serif;
   font-weight: 800;
-  font-size: 38px;
-  letter-spacing: -1px;
+  font-size: clamp(18px, 7vw, 38px);
+  letter-spacing: -0.5px;
   text-align: center;
   line-height: 1.1;
   margin-bottom: 8px;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }
 
 .card-hint {
@@ -1596,14 +1599,21 @@ function showFCCard() {
   flip.classList.remove('flipped');
 
   // Fill front
-  document.getElementById('fc-word').textContent = e.palabra;
+  const wordEl = document.getElementById('fc-word');
+  wordEl.textContent = e.palabra;
+  // Ajustar tamaño según longitud
+  const len = e.palabra.length;
+  if (len > 18) wordEl.style.fontSize = '16px';
+  else if (len > 14) wordEl.style.fontSize = '20px';
+  else if (len > 10) wordEl.style.fontSize = '26px';
+  else wordEl.style.fontSize = '';
   document.getElementById('fc-campo').textContent =
     e.campo_tematico || e.genero || '—';
 
   // Fill back
-  document.getElementById('fc-etym').textContent = e.etimologia_texto || '—';
+  document.getElementById('fc-etym').textContent = transliterar(e.etimologia_texto) || '—';
   const langsEl = document.getElementById('fc-langs');
-  langsEl.innerHTML = (e.lenguas_origen || [])
+  langsEl.innerHTML = filtrarLenguasAntiguas(e.lenguas_origen)
     .map(l => `<span class="lang-badge">${l}</span>`).join('');
 
   // Definition
@@ -1689,8 +1699,7 @@ function toggleDef() {
 // ══════════════════════════════════════════
 // QUIZ
 // ══════════════════════════════════════════
-const ALL_LANGS = ['Latín','Griego','Árabe','Francés','Italiano','Catalán',
-  'Portugués','Alemán','Inglés','Hebreo','Persa','Sánscrito','Vascuence','Eslavo'];
+const ALL_LANGS = ['Latín','Griego','Árabe','Hebreo','Persa','Sánscrito','Vascuence','Eslavo','Fenicio','Caldeo','Gótico','Germánico','Céltico','Egipcio'];
 
 let quizEntries = [];
 let quizIndex = 0;
@@ -1702,10 +1711,10 @@ async function startQuiz() {
   document.getElementById('quiz-subtitle').textContent = 'Cargando...';
   // Load entries that have at least one known language
   let entries = await loadRandomEntries(40);
-  quizEntries = entries.filter(e => e.lenguas_origen && e.lenguas_origen.length > 0).slice(0, 10);
+  quizEntries = entries.filter(e => filtrarLenguasAntiguas(e.lenguas_origen).length > 0).slice(0, 10);
   if (quizEntries.length < 5) {
     entries = await loadRandomEntries(60);
-    quizEntries = entries.filter(e => e.lenguas_origen && e.lenguas_origen.length > 0).slice(0, 10);
+    quizEntries = entries.filter(e => filtrarLenguasAntiguas(e.lenguas_origen).length > 0).slice(0, 10);
   }
   quizIndex = 0;
   quizSessionXP = 0;
@@ -1720,7 +1729,7 @@ function showQuizQuestion() {
   }
   quizAnswered = false;
   const e = quizEntries[quizIndex];
-  const correct = e.lenguas_origen[0];
+  const correct = filtrarLenguasAntiguas(e.lenguas_origen)[0] || e.lenguas_origen[0];
 
   document.getElementById('quiz-word').textContent = e.palabra;
   document.getElementById('quiz-etym-text').textContent =
@@ -1856,9 +1865,9 @@ function renderSearchResults(results, query) {
     <div class="result-card" onclick="openDetail(${i})">
       <div class="result-word">${e.palabra}</div>
       <div class="result-genre">${e.genero}${e.campo_tematico ? ' · ' + e.campo_tematico : ''}</div>
-      <div class="result-etym">${e.etimologia_texto}</div>
+      <div class="result-etym">${transliterar(e.etimologia_texto)}</div>
       <div class="result-langs">
-        ${(e.lenguas_origen||[]).map(l => `<span class="lang-badge">${l}</span>`).join('')}
+        ${filtrarLenguasAntiguas(e.lenguas_origen).map(l => `<span class="lang-badge">${l}</span>`).join('')}
       </div>
     </div>`).join('');
   // Store for detail
@@ -1873,9 +1882,9 @@ function openDetail(i) {
   document.getElementById('detail-meta').textContent =
     e.genero + (e.campo_tematico ? ' · ' + e.campo_tematico : '') +
     (e.tomo ? ' · Tomo ' + e.tomo : '');
-  document.getElementById('detail-etym').textContent = e.etimologia_texto || '—';
+  document.getElementById('detail-etym').textContent = transliterar(e.etimologia_texto) || '—';
   document.getElementById('detail-langs').innerHTML =
-    (e.lenguas_origen||[]).map(l => `<span class="lang-badge">${l}</span>`).join('') || '—';
+    filtrarLenguasAntiguas(e.lenguas_origen).map(l => `<span class="lang-badge">${l}</span>`).join('') || '—';
   document.getElementById('detail-def').textContent = e.definicion || '—';
   document.getElementById('detail-def-section').style.display = 'none';
   document.getElementById('detail-def-toggle').textContent = 'Ver definición completa';
@@ -1961,6 +1970,40 @@ function updateProfile() {
 // ══════════════════════════════════════════
 // INIT
 // ══════════════════════════════════════════
+
+// ── TRANSLITERACIÓN de caracteres no latinos
+function transliterar(texto) {
+  if (!texto) return texto;
+  const t = {
+    'Α':'A','Β':'B','Γ':'G','Δ':'D','Ε':'E','Ζ':'Z','Η':'E','Θ':'Th',
+    'Ι':'I','Κ':'K','Λ':'L','Μ':'M','Ν':'N','Ξ':'X','Ο':'O','Π':'P',
+    'Ρ':'R','Σ':'S','Τ':'T','Υ':'Y','Φ':'Ph','Χ':'Ch','Ψ':'Ps','Ω':'O',
+    'α':'a','β':'b','γ':'g','δ':'d','ε':'e','ζ':'z','η':'e','θ':'th',
+    'ι':'i','κ':'k','λ':'l','μ':'m','ν':'n','ξ':'x','ο':'o','π':'p',
+    'ρ':'r','σ':'s','ς':'s','τ':'t','υ':'y','φ':'ph','χ':'ch','ψ':'ps','ω':'o',
+    'ά':'a','έ':'e','ί':'i','ό':'o','ύ':'y','ή':'e','ώ':'o','ϊ':'i','ϋ':'y',
+    'א':'a','ב':'b','ג':'g','ד':'d','ה':'h','ו':'v','ז':'z','ח':'ch',
+    'ט':'t','י':'y','כ':'k','ל':'l','מ':'m','נ':'n','ס':'s','פ':'p',
+    'צ':'ts','ק':'q','ר':'r','ש':'sh','ת':'t','ך':'k','ם':'m','ן':'n','ף':'p','ץ':'ts',
+    'ا':'a','ب':'b','ت':'t','ج':'j','ح':'h','خ':'kh','د':'d','ر':'r',
+    'ز':'z','س':'s','ش':'sh','ص':'s','ط':'t','ف':'f','ق':'q','ك':'k',
+    'ل':'l','م':'m','ن':'n','ه':'h','و':'w','ي':'y',
+  };
+  return texto.split('').map(c => t[c] !== undefined ? t[c] : c).join('');
+}
+
+// ── LENGUAS MODERNAS a filtrar (no mostrar como badges)
+const LENGUAS_MODERNAS = new Set([
+  'Francés','Frances','Italiano','Catalán','Catalan','Portugués','Portugues',
+  'Español','Castellano','Inglés','Ingles','Alemán','Aleman','Provenzal',
+  'Provençal','Occitano','Gallego','Rumano','Valenciano','Mallorquín',
+  'Aragonés','Leonés','Mozárabe'
+]);
+
+function filtrarLenguasAntiguas(lenguas) {
+  return (lenguas || []).filter(l => !LENGUAS_MODERNAS.has(l));
+}
+
 updateHomeStats();
 checkAchievements();
 
