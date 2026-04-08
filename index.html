@@ -1611,7 +1611,7 @@ function showFCCard() {
     e.campo_tematico || e.genero || '—';
 
   // Fill back
-  document.getElementById('fc-etym').textContent = limpiarOCR(transliterar(e.etimologia_texto)) || '—';
+  document.getElementById('fc-etym').textContent = corregirOCR(limpiarOCR(eliminarLenguasModernas(transliterar(e.etimologia_texto)))) || '—';
   const langsEl = document.getElementById('fc-langs');
   langsEl.innerHTML = filtrarLenguasAntiguas(e.lenguas_origen)
     .map(l => `<span class="lang-badge">${l}</span>`).join('');
@@ -1732,7 +1732,7 @@ function showQuizQuestion() {
   const correct = filtrarLenguasAntiguas(e.lenguas_origen)[0] || e.lenguas_origen[0];
 
   document.getElementById('quiz-word').textContent = e.palabra;
-  const etymLimpia = limpiarOCR(transliterar(e.etimologia_texto));
+  const etymLimpia = corregirOCR(limpiarOCR(eliminarLenguasModernas(transliterar(e.etimologia_texto))));
   document.getElementById('quiz-etym-text').textContent =
     etymLimpia.substring(0, 120) + (etymLimpia.length > 120 ? '…' : '');
 
@@ -1866,7 +1866,7 @@ function renderSearchResults(results, query) {
     <div class="result-card" onclick="openDetail(${i})">
       <div class="result-word">${e.palabra}</div>
       <div class="result-genre">${e.genero}${e.campo_tematico ? ' · ' + e.campo_tematico : ''}</div>
-      <div class="result-etym">${limpiarOCR(transliterar(e.etimologia_texto))}</div>
+      <div class="result-etym">${corregirOCR(limpiarOCR(eliminarLenguasModernas(transliterar(e.etimologia_texto))))}</div>
       <div class="result-langs">
         ${filtrarLenguasAntiguas(e.lenguas_origen).map(l => `<span class="lang-badge">${l}</span>`).join('')}
       </div>
@@ -1883,7 +1883,7 @@ function openDetail(i) {
   document.getElementById('detail-meta').textContent =
     e.genero + (e.campo_tematico ? ' · ' + e.campo_tematico : '') +
     (e.tomo ? ' · Tomo ' + e.tomo : '');
-  document.getElementById('detail-etym').textContent = limpiarOCR(transliterar(e.etimologia_texto)) || '—';
+  document.getElementById('detail-etym').textContent = corregirOCR(limpiarOCR(eliminarLenguasModernas(transliterar(e.etimologia_texto)))) || '—';
   document.getElementById('detail-langs').innerHTML =
     filtrarLenguasAntiguas(e.lenguas_origen).map(l => `<span class="lang-badge">${l}</span>`).join('') || '—';
   document.getElementById('detail-def').textContent = procesarDefinicion(e.definicion);
@@ -1972,6 +1972,31 @@ function updateProfile() {
 // INIT
 // ══════════════════════════════════════════
 
+
+// ── Eliminar referencias a lenguas modernas del texto de etimología
+function eliminarLenguasModernas(texto) {
+  if (!texto) return texto;
+  const patron = /[;:,]\s*(francés|frances|italiano|catalán|catalan|portugués|portugues|inglés|ingles|alemán|aleman|provenzal|flamenco|holandés|rumano|gallego|valenciano)[,\s]+[^;:.]{1,60}/gi;
+  texto = texto.replace(patron, '');
+  texto = texto.replace(/[;:,]\s*$/, '.').trim();
+  texto = texto.replace(/\s+/g, ' ').trim();
+  return texto;
+}
+
+// ── Correcciones OCR conocidas
+const OCR_DICT = {
+  'líquiao':'líquido','liquiao':'líquido','anticuaao':'anticuado',
+  'segunao':'segundo','soldaao':'soldado','pequeao':'pequeño',
+  'antigao':'antiguo','masculiao':'masculino','femeniao':'femenino',
+  'quírnica':'química','ouien':'quien','costnmbres':'costumbres',
+};
+function corregirOCR(texto) {
+  if (!texto) return texto;
+  for (const [err, fix] of Object.entries(OCR_DICT)) {
+    texto = texto.replace(new RegExp('\\b' + err + '\\b', 'gi'), fix);
+  }
+  return texto;
+}
 
 // ── Procesar definición: máx 3 acepciones + capitalizar
 function procesarDefinicion(texto) {
