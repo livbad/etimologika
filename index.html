@@ -1611,13 +1611,13 @@ function showFCCard() {
     e.campo_tematico || e.genero || '—';
 
   // Fill back
-  document.getElementById('fc-etym').textContent = transliterar(e.etimologia_texto) || '—';
+  document.getElementById('fc-etym').textContent = limpiarOCR(transliterar(e.etimologia_texto)) || '—';
   const langsEl = document.getElementById('fc-langs');
   langsEl.innerHTML = filtrarLenguasAntiguas(e.lenguas_origen)
     .map(l => `<span class="lang-badge">${l}</span>`).join('');
 
   // Definition
-  document.getElementById('fc-def-panel').textContent = e.definicion || '';
+  document.getElementById('fc-def-panel').textContent = procesarDefinicion(e.definicion);
   document.getElementById('fc-def-panel').classList.remove('visible');
   document.getElementById('fc-def-btn').style.display = 'none';
 
@@ -1732,8 +1732,9 @@ function showQuizQuestion() {
   const correct = filtrarLenguasAntiguas(e.lenguas_origen)[0] || e.lenguas_origen[0];
 
   document.getElementById('quiz-word').textContent = e.palabra;
+  const etymLimpia = limpiarOCR(transliterar(e.etimologia_texto));
   document.getElementById('quiz-etym-text').textContent =
-    e.etimologia_texto.substring(0, 120) + (e.etimologia_texto.length > 120 ? '…' : '');
+    etymLimpia.substring(0, 120) + (etymLimpia.length > 120 ? '…' : '');
 
   // Build options: correct + 3 random wrong
   const wrong = ALL_LANGS.filter(l => l !== correct)
@@ -1865,7 +1866,7 @@ function renderSearchResults(results, query) {
     <div class="result-card" onclick="openDetail(${i})">
       <div class="result-word">${e.palabra}</div>
       <div class="result-genre">${e.genero}${e.campo_tematico ? ' · ' + e.campo_tematico : ''}</div>
-      <div class="result-etym">${transliterar(e.etimologia_texto)}</div>
+      <div class="result-etym">${limpiarOCR(transliterar(e.etimologia_texto))}</div>
       <div class="result-langs">
         ${filtrarLenguasAntiguas(e.lenguas_origen).map(l => `<span class="lang-badge">${l}</span>`).join('')}
       </div>
@@ -1882,10 +1883,10 @@ function openDetail(i) {
   document.getElementById('detail-meta').textContent =
     e.genero + (e.campo_tematico ? ' · ' + e.campo_tematico : '') +
     (e.tomo ? ' · Tomo ' + e.tomo : '');
-  document.getElementById('detail-etym').textContent = transliterar(e.etimologia_texto) || '—';
+  document.getElementById('detail-etym').textContent = limpiarOCR(transliterar(e.etimologia_texto)) || '—';
   document.getElementById('detail-langs').innerHTML =
     filtrarLenguasAntiguas(e.lenguas_origen).map(l => `<span class="lang-badge">${l}</span>`).join('') || '—';
-  document.getElementById('detail-def').textContent = e.definicion || '—';
+  document.getElementById('detail-def').textContent = procesarDefinicion(e.definicion);
   document.getElementById('detail-def-section').style.display = 'none';
   document.getElementById('detail-def-toggle').textContent = 'Ver definición completa';
 
@@ -1971,6 +1972,36 @@ function updateProfile() {
 // INIT
 // ══════════════════════════════════════════
 
+
+// ── Procesar definición: máx 3 acepciones + capitalizar
+function procesarDefinicion(texto) {
+  if (!texto) return '—';
+  // Capitalizar primera letra
+  texto = texto.charAt(0).toUpperCase() + texto.slice(1);
+  // Limpiar punto inicial si lo hay
+  texto = texto.replace(/^\.\s*/, '');
+  texto = texto.charAt(0).toUpperCase() + texto.slice(1);
+  // Separar por || (acepciones)
+  const acepciones = texto.split('||').map(a => a.trim()).filter(a => a.length > 5);
+  // Tomar máximo 3
+  const tres = acepciones.slice(0, 3);
+  return tres.join(' || ');
+}
+
+// ── Limpiar caracteres OCR imposibles del texto
+function limpiarOCR(texto) {
+  if (!texto) return texto;
+  // Eliminar tokens con caracteres imposibles pegados a letras
+  texto = texto.replace(/\w*[?!<>@#$%&*+=~`]\w*/g, '');
+  // Eliminar secuencias de símbolos sueltos
+  texto = texto.replace(/[?!<>@#$%&*+=~`]{1,}/g, '');
+  // Limpiar espacios múltiples y puntuación huérfana
+  texto = texto.replace(/\s+/g, ' ');
+  texto = texto.replace(/\s([,;:])/g, '$1');
+  texto = texto.replace(/^[,;:\s.]+/, '');
+  return texto.trim();
+}
+
 // ── TRANSLITERACIÓN de caracteres no latinos
 function transliterar(texto) {
   if (!texto) return texto;
@@ -1994,10 +2025,12 @@ function transliterar(texto) {
 
 // ── LENGUAS MODERNAS a filtrar (no mostrar como badges)
 const LENGUAS_MODERNAS = new Set([
-  'Francés','Frances','Italiano','Catalán','Catalan','Portugués','Portugues',
-  'Español','Castellano','Inglés','Ingles','Alemán','Aleman','Provenzal',
-  'Provençal','Occitano','Gallego','Rumano','Valenciano','Mallorquín',
-  'Aragonés','Leonés','Mozárabe'
+  'Francés','Frances','Italiano','Catalán','Catalan','Català',
+  'Portugués','Portugues','Español','Castellano','Inglés','Ingles',
+  'Alemán','Aleman','Provenzal','Provençal','Occitano','Gallego',
+  'Rumano','Valenciano','Mallorquín','Aragonés','Leonés','Mozárabe',
+  'Flamenco','Holandés','Sueco','Noruego','Danés','Polaco','Checo',
+  'Húngaro','Finlandés','Latin' // Latin sin acento = duplicado normalizado
 ]);
 
 function filtrarLenguasAntiguas(lenguas) {
